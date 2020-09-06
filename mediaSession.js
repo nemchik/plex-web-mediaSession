@@ -1,11 +1,11 @@
 function mediaControls() {
   if ("mediaSession" in navigator) {
-    if (
+    if ( // if tv is playing
       document.querySelector(
         "div[data-qa-id=playerControlsContainer] div[class^=PlayerControlsMetadata] span span:nth-child(1) span[class^=DashSeparator]"
       )
     ) {
-      // tv
+      // add metadata for tv
       navigator.mediaSession.metadata = new MediaMetadata({
         title: document.querySelector(
           "div[data-qa-id=playerControlsContainer] div[class^=PlayerControlsMetadata] span a[data-qa-id=metadataTitleLink]"
@@ -17,12 +17,12 @@ function mediaControls() {
           "div[data-qa-id=playerControlsContainer] div[class^=PlayerControlsMetadata] span span:nth-child(1)"
         ).textContent,
       });
-    } else if (
+    } else if ( // if music is playing
       document.querySelector(
         "div[data-qa-id=playerControlsContainer] div[class^=PlayerControlsMetadata] span span[class^=DashSeparator]"
       )
     ) {
-      // music
+      // add metadata for music
       navigator.mediaSession.metadata = new MediaMetadata({
         title: document.querySelector(
           "div[data-qa-id=playerControlsContainer] div[class^=PlayerControlsMetadata] a[data-qa-id=metadataTitleLink]"
@@ -35,7 +35,7 @@ function mediaControls() {
         ).textContent,
       });
     } else {
-      // movies
+      // add metadata for movies
       navigator.mediaSession.metadata = new MediaMetadata({
         title: document.querySelector(
           "div[data-qa-id=playerControlsContainer] div[class^=PlayerControlsMetadata] a[data-qa-id=metadataTitleLink]"
