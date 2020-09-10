@@ -1,6 +1,7 @@
 function mediaControls() {
   if ("mediaSession" in navigator) {
-    if ( // if tv is playing
+    if (
+      // if tv is playing
       document.querySelector(
         "div[data-qa-id=playerControlsContainer] div[class^=PlayerControlsMetadata] span span:nth-child(1) span[class^=DashSeparator]"
       )
@@ -17,7 +18,8 @@ function mediaControls() {
           "div[data-qa-id=playerControlsContainer] div[class^=PlayerControlsMetadata] span span:nth-child(1)"
         ).textContent,
       });
-    } else if ( // if music is playing
+    } else if (
+      // if music is playing
       document.querySelector(
         "div[data-qa-id=playerControlsContainer] div[class^=PlayerControlsMetadata] span span[class^=DashSeparator]"
       )
@@ -92,3 +94,25 @@ function mediaControls() {
 }
 
 mediaControls(); // needs to be called any time the playing media changes
+
+// Select the node that will be observed for mutations
+var targetNode = document.querySelector(
+  "div[data-qa-id=playerControlsContainer]"
+);
+
+// Options for the observer (which mutations to observe)
+var config = { attributes: true, childList: true, subtree: true };
+
+// Callback function to execute when mutations are observed
+var callback = function (mutationsList, observer) {
+  // Use traditional 'for loops' for IE 11
+  for (var mutation of mutationsList) {
+    mediaControls();
+  }
+};
+
+// Create an observer instance linked to the callback function
+var observer = new MutationObserver(callback);
+
+// Start observing the target node for configured mutations
+observer.observe(targetNode, config);
