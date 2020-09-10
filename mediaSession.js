@@ -2,11 +2,18 @@ function mediaControls() {
   if ("mediaSession" in navigator) {
     if (
       // if tv is playing
+      // hopefully Plex implements a better method of indicating when this type of media is playing
+      // we're just checking for the existence of specific elements on the page
       document.querySelector(
         "div[data-qa-id=playerControlsContainer] div[class^=PlayerControlsMetadata] span span:nth-child(1) span[class^=DashSeparator]"
       )
     ) {
       // add metadata for tv
+      // because of the differences in movies, music, and tv, it would be great if Plex were to add specific id attributes
+      // or data-* attributes to the elements used below so that selecting them is simpler and more concise
+      // ex: data-ms-id=title
+      // ex: data-ms-id=artist
+      // ex: data-ms-id=album
       navigator.mediaSession.metadata = new MediaMetadata({
         title: document.querySelector(
           "div[data-qa-id=playerControlsContainer] div[class^=PlayerControlsMetadata] span a[data-qa-id=metadataTitleLink]"
@@ -20,11 +27,18 @@ function mediaControls() {
       });
     } else if (
       // if music is playing
+      // hopefully Plex implements a better method of indicating when this type of media is playing
+      // we're just checking for the existence of specific elements on the page
       document.querySelector(
         "div[data-qa-id=playerControlsContainer] div[class^=PlayerControlsMetadata] span span[class^=DashSeparator]"
       )
     ) {
       // add metadata for music
+      // because of the differences in movies, music, and tv, it would be great if Plex were to add specific id attributes
+      // or data-* attributes to the elements used below so that selecting them is simpler and more concise
+      // ex: data-ms-id=title
+      // ex: data-ms-id=artist
+      // ex: data-ms-id=album
       navigator.mediaSession.metadata = new MediaMetadata({
         title: document.querySelector(
           "div[data-qa-id=playerControlsContainer] div[class^=PlayerControlsMetadata] a[data-qa-id=metadataTitleLink]"
@@ -38,6 +52,12 @@ function mediaControls() {
       });
     } else {
       // add metadata for movies
+      // hopefully Plex implements a better method of indicating when this type of media is playing
+      // we're just checking for the existence of specific elements on the page
+      // because of the differences in movies, music, and tv, it would be great if Plex were to add specific id attributes
+      // or data-* attributes to the elements used below so that selecting them is simpler and more concise
+      // ex: data-ms-id=title
+      // movies only uses title
       navigator.mediaSession.metadata = new MediaMetadata({
         title: document.querySelector(
           "div[data-qa-id=playerControlsContainer] div[class^=PlayerControlsMetadata] a[data-qa-id=metadataTitleLink]"
@@ -47,6 +67,8 @@ function mediaControls() {
 
     // controls
     navigator.mediaSession.setActionHandler("previoustrack", function () {
+      // ideally plex would call their own javascript functions that actually perform these button actions
+      // rather than simulating clicks on the elements that end up calling the functions anyway
       simulateClick(
         document.querySelector(
           "div[data-qa-id=playerControlsContainer] button[data-qa-id=previousButton]"
@@ -54,6 +76,8 @@ function mediaControls() {
       );
     });
     navigator.mediaSession.setActionHandler("nexttrack", function () {
+      // ideally plex would call their own javascript functions that actually perform these button actions
+      // rather than simulating clicks on the elements that end up calling the functions anyway
       simulateClick(
         document.querySelector(
           "div[data-qa-id=playerControlsContainer] button[data-qa-id=nextButton]"
@@ -61,6 +85,8 @@ function mediaControls() {
       );
     });
     navigator.mediaSession.setActionHandler("play", function () {
+      // ideally plex would call their own javascript functions that actually perform these button actions
+      // rather than simulating clicks on the elements that end up calling the functions anyway
       simulateClick(
         document.querySelector(
           "div[data-qa-id=playerControlsContainer] button[data-qa-id=resumeButton]"
@@ -68,6 +94,8 @@ function mediaControls() {
       );
     });
     navigator.mediaSession.setActionHandler("pause", function () {
+      // ideally plex would call their own javascript functions that actually perform these button actions
+      // rather than simulating clicks on the elements that end up calling the functions anyway
       simulateClick(
         document.querySelector(
           "div[data-qa-id=playerControlsContainer] button[data-qa-id=pauseButton]"
@@ -94,6 +122,10 @@ function mediaControls() {
 }
 
 mediaControls(); // needs to be called any time the playing media changes
+
+// everything below this point is just a quick way for this script to detect when changes happen to the playing media
+// Plex hopefully already has events they are creating
+// and events they are listening for in other scripts and could use what they already have
 
 // Select the node that will be observed for mutations
 var targetNode = document.querySelector(
